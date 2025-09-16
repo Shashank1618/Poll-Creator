@@ -56,7 +56,7 @@ const options = {
     transitionDuration: 300
 };
 
-const host = () => {
+const Host = () => {
 
     const [socket, setSocket] = useState(io(app_config.api_url, { autoConnect: false }));
     const { id } = useParams();
@@ -133,4 +133,4 @@ const host = () => {
     )
 }
 
-export default host;
+export default Host;
