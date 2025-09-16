@@ -7,48 +7,64 @@ import toast from 'react-hot-toast';
 
 const ManageRoom = () => {
 
-  // const [count, setCount] = useState(0);
   const [RoomList, setRoomList] = useState([]);
 
-  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')));
+  // 1. Initialize currentUser state with null.
+  const [currentUser, setCurrentUser] = useState(null);
 
   const inputRef = useRef(null);
 
+  // 2. Use useEffect to safely access localStorage on the client-side.
+  useEffect(() => {
+    // This code only runs in the browser after the component has mounted.
+    const userFromStorage = localStorage.getItem('user');
+    if (userFromStorage) {
+      setCurrentUser(JSON.parse(userFromStorage));
+    }
+    // We can also fetch the data here, after we know we are on the client.
+    fetchUsersData();
+  }, []); // The empty array [] ensures this runs only once.
 
-  const fetchUsersData = async () => {  //user async with the await keyword because it only works in async functions
-    const res = await axios.get(app_config.api_url+'/room/getall');
-    console.log(res.status);
-    console.table(res.data);
-    setRoomList(res.data)
+
+  const fetchUsersData = async () => {
+    try {
+      const res = await axios.get(app_config.api_url + '/room/getall');
+      setRoomList(res.data);
+    } catch (error) {
+      console.error("Failed to fetch room data:", error);
+      toast.error('Could not fetch rooms.');
+    }
   }
 
-  useEffect(() => {
-    fetchUsersData();
-  }, []);
-
   const deleteRoom = (index) => {
-    console.log(index);
-    const temp = RoomList;
-    temp.splice(index, 1)
-    setRoomList([...temp])
+    const temp = [...RoomList];
+    temp.splice(index, 1);
+    setRoomList(temp);
   }
 
   const createNewRoom = () => {
-    axios.post(app_config.api_url+'/room/add', { title: inputRef.current.value, owner: currentUser._id })
+    // 3. Add a check to ensure currentUser is loaded before trying to use it.
+    if (!currentUser) {
+      toast.error('You must be logged in to create a room.');
+      return;
+    }
+
+    axios.post(app_config.api_url + '/room/add', { title: inputRef.current.value, owner: currentUser._id })
       .then((result) => {
-        toast.success('room created');
-        fetchUsersData();
+        toast.success('Room created successfully!');
+        fetchUsersData(); // Refresh the list
+        if (inputRef.current) {
+          inputRef.current.value = ''; // Clear the input field
+        }
       }).catch((err) => {
         console.log(err);
-        toast.error('some error ocuured');
+        toast.error('Some error occurred.');
       });
   }
 
   return (
     <div className='max-w-5xl mx-auto mt-6'>
-
       <div className='border shadow rounded-xl'>
-
         <div className='p-4 border-b-2'>
           <input
             ref={inputRef}
@@ -56,18 +72,12 @@ const ManageRoom = () => {
             type="text" className='w-full px-3 py-3 bg-gray-300 rounded-xl outline-none' />
           <button onClick={createNewRoom} className='border p-4 mt-3 rounded-full border-blue-600 text-white bg-blue-600 font-semibold text-sm'>Create New Room</button>
         </div>
-
         <div className='p-6'>
-
           {
-
             RoomList.map((room, i) => {
               return (
-
                 <div key={room._id} className='rounded-md border mb-5 shadow p-4 bg-gray-100'>
-
                   <p>{room.title}</p>
-
                   <div className='mt-2 flex justify-end gap-4'>
                     <Link
                       href={'/host/' + room._id}
@@ -83,7 +93,6 @@ const ManageRoom = () => {
                 </div>
               )
             })
-
           }
         </div>
       </div>
@@ -91,4 +100,4 @@ const ManageRoom = () => {
   )
 }
 
-export default ManageRoom
+export default ManageRoom;
