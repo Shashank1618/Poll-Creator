@@ -4,11 +4,12 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
 import QRCode from 'react-qr-code';
-//import ReactWordcloud from 'react-wordcloud';
+{/* import ReactWordcloud from 'react-wordcloud'; */}
 import { io } from 'socket.io-client';
 
-// const words = [
-//     {
+ const words = [
+{/*
+    //     {
 //         text: 'told',
 //         value: 64,
 //     },
@@ -38,7 +39,8 @@ import { io } from 'socket.io-client';
 //     },
 
 
-// ]
+//]
+*/}
 
 const options = {
     colors: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
@@ -123,7 +125,7 @@ const Host = () => {
                     </div>
                     <div className='p-6'>
                         {/* {submittedPolls} */}
-                       // <ReactWordcloud options={options} words={formatWordData()} />
+                        {/* <ReactWordcloud words={formatWordData()} options={options} /> */}
                     </div>
                 </div>
 
