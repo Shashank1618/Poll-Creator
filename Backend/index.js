@@ -1,4 +1,8 @@
 //importing express
+// in index.js
+require('dotenv').config();
+console.log('The MONGODB_URI is:', process.env.MONGODB_URI);
+
 const http = require("http")
 const express = require("express");
 const { Server } = require("socket.io");

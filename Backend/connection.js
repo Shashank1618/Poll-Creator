@@ -1,6 +1,8 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
-const url = 'mongodb+srv://ayush1210:allsmall2004@mern.ddk0v.mongodb.net/LivePollCreator?retryWrites=true&w=majority&appName=MERN'  // connected to the database
+
+const url = process.env.MONGODB_URI;
 
 // asynchronous - returns a promise
 mongoose.connect(url)
