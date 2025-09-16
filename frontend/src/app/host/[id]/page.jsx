@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
 import QRCode from 'react-qr-code';
-import ReactWordcloud from 'react-wordcloud';
+//import ReactWordcloud from 'react-wordcloud';
 import { io } from 'socket.io-client';
 
 // const words = [
@@ -123,7 +123,7 @@ const Host = () => {
                     </div>
                     <div className='p-6'>
                         {/* {submittedPolls} */}
-                        <ReactWordcloud options={options} words={formatWordData()} />
+                       // <ReactWordcloud options={options} words={formatWordData()} />
                     </div>
                 </div>
 
